@@ -25,6 +25,8 @@
 /* Begin PBXFileReference section */
 		FAE77D741E8CC4F200342DE7 /* Last Episode */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Last Episode"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAE77D771E8CC4F200342DE7 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		FAE77D801E8CC5EC00342DE7 /* cppjieba */ = {isa = PBXFileReference; lastKnownFileType = folder; path = cppjieba; sourceTree = "<group>"; };
+		FAE77D811E8CC64C00342DE7 /* dict */ = {isa = PBXFileReference; lastKnownFileType = folder; name = dict; path = ../Build/Products/Debug/dict; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +59,8 @@
 		FAE77D761E8CC4F200342DE7 /* Last Episode */ = {
 			isa = PBXGroup;
 			children = (
+				FAE77D811E8CC64C00342DE7 /* dict */,
+				FAE77D801E8CC5EC00342DE7 /* cppjieba */,
 				FAE77D771E8CC4F200342DE7 /* main.cpp */,
 			);
 			path = "Last Episode";
