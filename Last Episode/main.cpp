@@ -30,7 +30,28 @@ int main() {
     messages = getMessages(words);  // Get messages from words.
     feelings = getFeelings(words);  // Get feelings from words.
     
+    // Build map<int, string>，like: map<index in vector, sentence>, none repeat
+    MY_MAP mp4Msg, mp4Flg;
+    mp4Msg = vec2Map(messages);
+    mp4Flg = vec2Map(feelings);
+    
+    // Vectors of none repeat
+    messages.clear();
+    feelings.clear();
+    messages = map2Vec(mp4Msg);
+    feelings = map2Vec(mp4Flg);
+    
     // Start cutting words.
+    vector<vector<string>> ctRst4Msg;
+    vector<vector<string>> ctRst4Flg;
+    
+    vector<vector<vector<string>>> result;
+    result = cutWords(messages, feelings, jieba);   /** 为什么不能分开计算？**/
+    ctRst4Msg = result[0];
+    ctRst4Flg = result[1];
+    
+    // TODO: vector 去重、去停用词，计算 tf－idf 矩阵
+    
     
     return 0;
 }
@@ -57,14 +78,14 @@ int main() {
 //    string s;
 //    string result;
 //    
-//    s = "他来到了网易杭研大厦";
+//    s = "目前拿到了7个大学offer，求问大家宾大哥大mcp选哪个好啊？\r";
 //    cout << s << endl;
 //    cout << "[demo] Cut With HMM" << endl;
 //    jieba.Cut(s, words, true);
 //    cout << limonp::Join(words.begin(), words.end(), "/") << endl;
 //    
 //    cout << "[demo] Cut Without HMM " << endl;
-//    jieba.Cut(s, words, false);
+//    jieba.Cut(s, words, true);
 //    cout << limonp::Join(words.begin(), words.end(), "/") << endl;
 //    
 //    s = "我来到北京清华大学";
