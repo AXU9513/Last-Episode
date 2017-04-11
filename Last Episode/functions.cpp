@@ -8,6 +8,77 @@
 
 #include "functions.hpp"
 
+MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<string> feelings, cppjieba::Jieba jieba) {
+    MY_MAP map;
+    vector<string> wordVector, wordVec;
+    vector<string>::iterator it;
+    for (int i = 0; i < messages.size(); i++) {     // Joint "messages" and "feelings".
+        wordVector.push_back(messages[i]);
+    }
+    for (int i = 0; i < feelings.size(); i++) {
+        wordVector.push_back(feelings[i]);
+    }
+//    sort(wordVector[0].begin(), wordVector[0].end());
+//    it = unique(wordVector[0].begin(), wordVector[0].end());
+//    wordVector[0].erase(it, wordVector[0].end());
+//    for (int i = 1; i < wordVector.size(); i++) {
+//        sort(wordVector[i].begin(), wordVector[i].end());
+//        it = unique(wordVector[i].begin(), wordVector[i].end());
+//        wordVector[i].erase(it, wordVector[i].end());
+//        set_union(wordVector[i-1].begin(), wordVector[i-1].end(), wordVector[i].begin(), wordVector[i].end(), inserter(wordVec, wordVec.begin()));
+//        pthread_t newThread;
+//        pthread_create(&newThread, NULL, printProcess, (void *)i);
+//    }
+    string str = limonp::Join(wordVector.begin(), wordVector.end(), ",");
+    jieba.Cut(str, wordVec);
+    sort(wordVec.begin(), wordVec.end());
+    it = unique(wordVec.begin(), wordVec.end());
+    wordVec.erase(it, wordVec.end());
+    map = vec2Map(wordVec);
+    return map;
+}
+
+vector<vector<string>> removeStopWords(vector<string> stopWords, vector<vector<string>> wordVector, bool unique) {
+    if (unique) {   // No repeat words in wordVector
+        for (int i = 0; i < wordVector.size(); i++) {
+            sort(wordVector[i].begin(), wordVector[i].end());
+            vector<string> result;
+            set_difference(wordVector[i].begin(), wordVector[i].end(), stopWords.begin(), stopWords.end(), inserter(result, result.begin()));
+            wordVector[i] = result;
+        }
+    } else {    // Have repeat words in wordVector
+        for (int i = 0; i < wordVector.size(); i++) {
+            sort(wordVector[i].begin(), wordVector[i].end());
+            vector<string> result;
+            unsigned long lastSize = wordVector[i].size();
+            while (lastSize != result.size()) {     /** 此处求wordVector与停用词表差集，每次set_difference只能去除重复词中的一个，所以多次调用直到结果无变化 **/
+                lastSize = result.size();
+                result.clear();
+                set_difference(wordVector[i].begin(), wordVector[i].end(), stopWords.begin(), stopWords.end(), inserter(result, result.begin()));
+                wordVector[i] = result;
+            }
+        }
+    }
+    return wordVector;
+}
+
+vector<string> getStopWords() {
+    vector<string> stopWords;
+    // Read stop_words from dict to stopWords.
+    cout << "Reading stop_words from file..." << endl;
+    string line;
+    ifstream in;
+    in.open("dict/stop_words.utf8");
+    if (in.is_open()) {
+        while (getline(in, line)) {
+            istringstream stream(line);
+            stopWords.push_back(line);
+        }
+    }
+    sort(stopWords.begin(), stopWords.end());
+    return stopWords;
+}
+
 vector<string> map2Vec(MY_MAP map) {
     vector<string> sentence;
     MY_MAP::iterator it;
@@ -27,7 +98,6 @@ map<string, int> vec2Map(vector<string> vector) {
         map.insert(MY_MAP::value_type(vector[i], i));
         lastWord = vector[i];
     }
-//    map.erase(map.begin());
     return map;
 }
 
@@ -47,15 +117,18 @@ vector<string> getFeelings(vector<vector<string>> words) {
     return feelings;
 }
 
-//vector<vector<string>> cutMsgs(vector<string> sentence, cppjieba::Jieba jieba) {
-//    vector<vector<string>> ctRst;
-//    vector<string> temp;
-//    for (int i = 1; i < sentence.size(); i++) {
-//        jieba.Cut(sentence[i], temp);
-//        ctRst.push_back(temp);
-//    }
-//    return ctRst;
-//}
+vector<vector<string>> cutWords(vector<string> sentence, cppjieba::Jieba jieba) {
+    vector<vector<string>> ctRst;
+    vector<string> temp;
+    cout << "Start cutting words..." << endl;
+    for (int i = 0; i < sentence.size(); i++) {
+        jieba.Cut(sentence[i], temp);
+        ctRst.push_back(temp);
+    }
+    vector<vector<vector<string>>> result;
+    result.push_back(ctRst);
+    return ctRst;
+}
 
 vector<vector<vector<string>>> cutWords(vector<string> sentence, vector<string> sentence2, cppjieba::Jieba jieba) {
     vector<vector<string>> ctRst, ctRst2;
@@ -76,9 +149,10 @@ vector<vector<vector<string>>> cutWords(vector<string> sentence, vector<string> 
     return result;
 }
 
-vector<vector<string>> readData(vector<vector<string>> words) {
+vector<vector<string>> readData() {
     // Read data from csv to words.
     cout << "Reading data from file..." << endl;
+    vector<vector<string>> words;
     string line, field, tempField = "";
     ifstream in;
     in.open("data.csv");

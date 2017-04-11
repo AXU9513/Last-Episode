@@ -1,5 +1,6 @@
 dependencies: \
   /Users/Alex/Documents/Xcode/Last\ Episode/Last\ Episode/main.cpp \
+  /Users/Alex/Documents/Xcode/Last\ Episode/Last\ Episode/functions.hpp \
   /Users/Alex/Documents/Xcode/Last\ Episode/Last\ Episode/cppjieba/Jieba.hpp \
   /Users/Alex/Documents/Xcode/Last\ Episode/Last\ Episode/cppjieba/QuerySegment.hpp \
   /Users/Alex/Documents/Xcode/Last\ Episode/Last\ Episode/cppjieba/limonp/Logging.hpp \

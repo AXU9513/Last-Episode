@@ -26,20 +26,27 @@ int main() {
     vector<string> messages;
     vector<string> feelings;
     
-    words = readData(words);    // Read data from csv to words.
+    words = readData();    // Read data from csv to words.
     messages = getMessages(words);  // Get messages from words.
     feelings = getFeelings(words);  // Get feelings from words.
     
-    // Build map<int, string>，like: map<index in vector, sentence>, none repeat
+    // Build map<int, string>，like: map<index in vector, sentence>, none repeat.
     MY_MAP mp4Msg, mp4Flg;
     mp4Msg = vec2Map(messages);
     mp4Flg = vec2Map(feelings);
     
-    // Vectors of none repeat
+    // Vectors of none repeat.
     messages.clear();
     feelings.clear();
     messages = map2Vec(mp4Msg);
     feelings = map2Vec(mp4Flg);
+    
+    // Read stop words from dictionary.
+    vector<string> stopWords;
+    stopWords = getStopWords();
+    
+    // Build word index.
+    MY_MAP wordIndex = buildWordIndex(stopWords, messages, feelings, jieba);
     
     // Start cutting words.
     vector<vector<string>> ctRst4Msg;
@@ -51,6 +58,15 @@ int main() {
     ctRst4Flg = result[1];
     
     // TODO: vector 去重、去停用词，计算 tf－idf 矩阵
+    
+    
+    // TODO: 建立索引（并集、去重、去停用词、vec2map），返回索引
+
+    
+    // Remove stop words from messages & feelings.
+    ctRst4Msg = removeStopWords(stopWords, ctRst4Msg, false);
+    ctRst4Flg = removeStopWords(stopWords, ctRst4Flg, false);
+    
     
     
     return 0;
