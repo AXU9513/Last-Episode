@@ -10,22 +10,17 @@
 using namespace std;
 using namespace cppjieba;
 
-const char* const DICT_PATH = "dict/jieba.dict.utf8";
-const char* const HMM_PATH = "dict/hmm_model.utf8";
-const char* const USER_DICT_PATH = "dict/user.dict.utf8";
-const char* const IDF_PATH = "dict/idf.utf8";
-const char* const STOP_WORD_PATH = "dict/stop_words.utf8";
-
 int main() {
-    Jieba jieba(DICT_PATH,
-                HMM_PATH,
-                USER_DICT_PATH,
-                IDF_PATH,
-                STOP_WORD_PATH);
+//    Jieba jieba(DICT_PATH,
+//                HMM_PATH,
+//                USER_DICT_PATH,
+//                IDF_PATH,
+//                STOP_WORD_PATH);
     vector<vector<string>> words;
     vector<string> messages;
     vector<string> feelings;
     
+    // Get data from file.
     words = readData();    // Read data from csv to words.
     messages = getMessages(words);  // Get messages from words.
     feelings = getFeelings(words);  // Get feelings from words.
@@ -35,7 +30,7 @@ int main() {
     mp4Msg = vec2Map(messages);
     mp4Flg = vec2Map(feelings);
     
-    // Vectors of none repeat.
+    // Vectors with no repeat.
     messages.clear();
     feelings.clear();
     messages = map2Vec(mp4Msg);
@@ -46,26 +41,33 @@ int main() {
     stopWords = getStopWords();
     
     // Build word index.
-    MY_MAP wordIndex = buildWordIndex(stopWords, messages, feelings, jieba);
+    MY_MAP wordIndex = buildWordIndex(stopWords, messages, feelings);
     
     // Start cutting words.
     vector<vector<string>> ctRst4Msg;
     vector<vector<string>> ctRst4Flg;
     
-    vector<vector<vector<string>>> result;
-    result = cutWords(messages, feelings, jieba);   /** 为什么不能分开计算？**/
-    ctRst4Msg = result[0];
-    ctRst4Flg = result[1];
+//    vector<vector<vector<string>>> result;
+    vector<vector<string>> result;
+//    result = cutWords(messages, feelings);   /** 为什么不能分开计算？**/
+    result = cutWords(messages, "messages");
+    ctRst4Msg = result;
+    result = cutWords(feelings, "feelings");
+    ctRst4Flg = result;
+//    ctRst4Msg = result[0];
+//    ctRst4Flg = result[1];
     
     // TODO: vector 去重、去停用词，计算 tf－idf 矩阵
     
-    
-    // TODO: 建立索引（并集、去重、去停用词、vec2map），返回索引
-
-    
     // Remove stop words from messages & feelings.
-    ctRst4Msg = removeStopWords(stopWords, ctRst4Msg, false);
-    ctRst4Flg = removeStopWords(stopWords, ctRst4Flg, false);
+    ctRst4Msg = removeStopWords(stopWords, ctRst4Msg, false, "messages");
+    ctRst4Flg = removeStopWords(stopWords, ctRst4Flg, false, "feelings");
+    
+    // Replace wordVector with indexVector.
+    vector<vector<int>> msgIndex;
+    vector<vector<int>> flgIndex;
+    msgIndex = word2Index(wordIndex, ctRst4Msg, "messages");
+    flgIndex = word2Index(wordIndex, ctRst4Flg, "feelings");
     
     
     

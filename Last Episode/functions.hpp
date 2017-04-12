@@ -18,13 +18,21 @@
 using namespace std;
 typedef map<string, int> MY_MAP;
 
+const char* const DICT_PATH = "dict/jieba.dict.utf8";
+const char* const HMM_PATH = "dict/hmm_model.utf8";
+const char* const USER_DICT_PATH = "dict/user.dict.utf8";
+const char* const IDF_PATH = "dict/idf.utf8";
+const char* const STOP_WORD_PATH = "dict/stop_words.utf8";
+
 vector<vector<string>> readData();  // Get data from data source.
 
 vector<string> getMessages(vector<vector<string>> words);   // Get messages from source data.
 
 vector<string> getFeelings(vector<vector<string>> words);   // Get feelings from source data.
 
-vector<vector<vector<string>>> cutWords(vector<string> sentence, vector<string> sentence2, cppjieba::Jieba jieba);  // Cut words in messages and feelings.
+vector<vector<string>> cutWords(vector<string> sentence, string name);   // Cut words.
+
+//vector<vector<vector<string>>> cutWords(vector<string> sentence, vector<string> sentence2);  // Cut words in messages and feelings.
 
 MY_MAP vec2Map(vector<string> vector);  // Transform vector to map.
 
@@ -32,8 +40,10 @@ vector<string> map2Vec(MY_MAP map);     //Transform map to vector.
 
 vector<string> getStopWords();    // Get stop words from dict.
 
-vector<vector<string>> removeStopWords(vector<string> stopWords, vector<vector<string>> wordVector, bool unique);   // Remove stop words in wordVector.
+vector<vector<string>> removeStopWords(vector<string> stopWords, vector<vector<string>> wordVector, bool unique, string name);   // Remove stop words in wordVector.
 
-MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<string> feelings, cppjieba::Jieba jieba); // Build word index.
+MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<string> feelings); // Build word index.
+
+vector<vector<int>> word2Index(MY_MAP wordIndex, vector<vector<string>> wordVector, string name);  // Transform wordVector to indexVector.
 
 #endif /* functions_hpp */
