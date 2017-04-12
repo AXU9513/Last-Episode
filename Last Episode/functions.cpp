@@ -8,6 +8,29 @@
 
 #include "functions.hpp"
 
+vector<vector<double>> getTF(vector<vector<int>> sntncIndex, MY_MAP wordIndex, string name){
+    cout << "Start calculate TF matrix for "<< name << "..." << endl;
+    int dicLength = (int)wordIndex.size();
+    int sentenceLength = (int)sntncIndex.size();
+    int n = 0, m = 0;
+    vector<vector <double> > tfMatrix(sentenceLength ,vector<double>(dicLength, 0.0));  // Init a n*m matrix with all elements equal to 0
+    for (int i = 0; i < sentenceLength; i++) {
+        for (int j = 0; j < sntncIndex[i].size(); j++) {
+            tfMatrix[i][sntncIndex[i][j]]++;    // Count the times a word appears in artical i.
+            n++;
+        }
+        for (int k = 0; k < tfMatrix[i].size(); k++) {
+            if (tfMatrix[i][k] != 0) {
+                tfMatrix[i][k] = (double)tfMatrix[i][k]/(double)tfMatrix[i].size();
+                m++;
+            }
+        }
+    }
+    cout << "   done." << endl;
+    cout << "m = " << m << "; n = " << n << endl;
+    return tfMatrix;
+}
+
 vector<vector<int>> word2Index(MY_MAP map, vector<vector<string>> wordVector, string name) {
     vector<vector<int>> indexVector;
     indexVector.reserve(wordVector.size());
@@ -38,6 +61,7 @@ MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<
                           STOP_WORD_PATH);
     MY_MAP map;
     vector<string> wordVector, wordVec;
+    wordVector.reserve(messages.size()+feelings.size());
     vector<string>::iterator it;
     cout << "Prepare to build word index." << endl;
     cout << "       Connecting sentences..." << endl;
@@ -47,17 +71,6 @@ MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<
     for (int i = 0; i < feelings.size(); i++) {
         wordVector.push_back(feelings[i]);
     }
-//    sort(wordVector[0].begin(), wordVector[0].end());
-//    it = unique(wordVector[0].begin(), wordVector[0].end());
-//    wordVector[0].erase(it, wordVector[0].end());
-//    for (int i = 1; i < wordVector.size(); i++) {
-//        sort(wordVector[i].begin(), wordVector[i].end());
-//        it = unique(wordVector[i].begin(), wordVector[i].end());
-//        wordVector[i].erase(it, wordVector[i].end());
-//        set_union(wordVector[i-1].begin(), wordVector[i-1].end(), wordVector[i].begin(), wordVector[i].end(), inserter(wordVec, wordVec.begin()));
-//        pthread_t newThread;
-//        pthread_create(&newThread, NULL, printProcess, (void *)i);
-//    }
     string str = limonp::Join(wordVector.begin(), wordVector.end(), ",");
     cout << "       Cutting sentences to words..." << endl;
     jieba.Cut(str, wordVec);
@@ -66,7 +79,6 @@ MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<
     wordVec.erase(it, wordVec.end());
     cout << "       Building..." << endl;
     map = vec2Map(wordVec);
-//    jieba.~Jieba();
     cout << "   done." << endl;
     return map;
 }
@@ -84,6 +96,7 @@ vector<vector<string>> removeStopWords(vector<string> stopWords, vector<vector<s
         for (int i = 0; i < wordVector.size(); i++) {
             sort(wordVector[i].begin(), wordVector[i].end());
             vector<string> result;
+            result.reserve(wordVector[i].size());
             unsigned long lastSize = wordVector[i].size();
             while (lastSize != result.size()) {     /** 此处求wordVector与停用词表差集，每次set_difference只能去除重复词中的一个，所以多次调用直到结果无变化 **/
                 lastSize = result.size();
@@ -110,6 +123,7 @@ vector<string> getStopWords() {
             stopWords.push_back(line);
         }
     }
+    stopWords.push_back("\r");
     sort(stopWords.begin(), stopWords.end());
     cout << "   done." << endl;
     return stopWords;
@@ -139,6 +153,7 @@ map<string, int> vec2Map(vector<string> vector) {
 
 vector<string> getMessages(vector<vector<string>> words) {
     vector<string> messages;
+    messages.reserve(words.size());
     for (int i = 1; i < words.size(); i++) {
         messages.push_back(words[i][18]);
     }
@@ -147,6 +162,7 @@ vector<string> getMessages(vector<vector<string>> words) {
 
 vector<string> getFeelings(vector<vector<string>> words) {
     vector<string> feelings;
+    feelings.reserve(words.size());
     for (int i = 1; i < words.size(); i++) {
         feelings.push_back(words[i][19]);
     }
@@ -162,41 +178,14 @@ vector<vector<string>> cutWords(vector<string> sentence, string name) {
                           IDF_PATH,
                           STOP_WORD_PATH);
     cout << "Start cutting words in "<< name << "..." << endl;
+    ctRst.reserve(sentence.size());
     for (int i = 0; i < sentence.size(); i++) {
         jieba.Cut(sentence[i], temp);
         ctRst.push_back(temp);
     }
     cout << "   done." << endl;
-//    vector<vector<vector<string>>> result;
-//    result.push_back(ctRst);
-//    jieba.~Jieba();
     return ctRst;
 }
-
-//vector<vector<vector<string>>> cutWords(vector<string> sentence, vector<string> sentence2) {
-//    vector<vector<string>> ctRst, ctRst2;
-//    vector<string> temp, temp2;
-//    cppjieba::Jieba jieba(DICT_PATH,
-//                HMM_PATH,
-//                USER_DICT_PATH,
-//                IDF_PATH,
-//                STOP_WORD_PATH);
-//    cout << "Start cutting messages..." << endl;
-//    for (int i = 0; i < sentence.size(); i++) {
-//        jieba.Cut(sentence[i], temp);
-//        ctRst.push_back(temp);
-//    }
-//    cout << "Start cutting feelings..." << endl;
-//    for (int i = 0; i < sentence2.size(); i++) {
-//        jieba.Cut(sentence2[i], temp2);
-//        ctRst2.push_back(temp2);
-//    }
-//    vector<vector<vector<string>>> result;
-//    result.push_back(ctRst);
-//    result.push_back(ctRst2);
-////    jieba.~Jieba();
-//    return result;
-//}
 
 vector<vector<string>> readData() {
     // Read data from csv to words.

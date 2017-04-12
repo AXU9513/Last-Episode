@@ -6,6 +6,14 @@
          contextName = "std::__1::__bucket_list_deallocator&lt;std::__1::allocator&lt;std::__1::__hash_node&lt;std::__1::__hash_value_type&lt;unsigned int, cppjieba::TrieNode*&gt;, void*&gt;*&gt; &gt;::size() const [inlined]:__hash_table">
       </ContextState>
       <ContextState
+         contextName = "getTF(std::__1::vector&lt;std::__1::vector&lt;int, std::__1::allocator&lt;int&gt; &gt;, std::__1::allocator&lt;std::__1::vector&lt;int, std::__1::allocator&lt;int&gt; &gt; &gt; &gt;, std::__1::map&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, int, std::__1::less&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt;, std::__1::allocator&lt;std::__1::pair&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; const, int&gt; &gt; &gt;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;):functions.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "sntncIndex[1][1]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "readData(std::__1::vector&lt;std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;, std::__1::allocator&lt;std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt; &gt; &gt;):functions.cpp">
       </ContextState>
       <ContextState
@@ -13,11 +21,6 @@
       </ContextState>
       <ContextState
          contextName = "main:main.cpp">
-         <PersistentStrings>
-            <PersistentString
-               value = "crRst4Msg.size()">
-            </PersistentString>
-         </PersistentStrings>
       </ContextState>
    </ContextStates>
 </VariablesViewState>

@@ -32,8 +32,6 @@ vector<string> getFeelings(vector<vector<string>> words);   // Get feelings from
 
 vector<vector<string>> cutWords(vector<string> sentence, string name);   // Cut words.
 
-//vector<vector<vector<string>>> cutWords(vector<string> sentence, vector<string> sentence2);  // Cut words in messages and feelings.
-
 MY_MAP vec2Map(vector<string> vector);  // Transform vector to map.
 
 vector<string> map2Vec(MY_MAP map);     //Transform map to vector.
@@ -45,5 +43,7 @@ vector<vector<string>> removeStopWords(vector<string> stopWords, vector<vector<s
 MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<string> feelings); // Build word index.
 
 vector<vector<int>> word2Index(MY_MAP wordIndex, vector<vector<string>> wordVector, string name);  // Transform wordVector to indexVector.
+
+vector<vector<double>> getTF(vector<vector<int>> sntncIndex, MY_MAP wordIndex, string name); // Calculate word frequency in every document, return all documents.
 
 #endif /* functions_hpp */

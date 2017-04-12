@@ -11,11 +11,6 @@ using namespace std;
 using namespace cppjieba;
 
 int main() {
-//    Jieba jieba(DICT_PATH,
-//                HMM_PATH,
-//                USER_DICT_PATH,
-//                IDF_PATH,
-//                STOP_WORD_PATH);
     vector<vector<string>> words;
     vector<string> messages;
     vector<string> feelings;
@@ -47,17 +42,11 @@ int main() {
     vector<vector<string>> ctRst4Msg;
     vector<vector<string>> ctRst4Flg;
     
-//    vector<vector<vector<string>>> result;
     vector<vector<string>> result;
-//    result = cutWords(messages, feelings);   /** 为什么不能分开计算？**/
     result = cutWords(messages, "messages");
     ctRst4Msg = result;
     result = cutWords(feelings, "feelings");
     ctRst4Flg = result;
-//    ctRst4Msg = result[0];
-//    ctRst4Flg = result[1];
-    
-    // TODO: vector 去重、去停用词，计算 tf－idf 矩阵
     
     // Remove stop words from messages & feelings.
     ctRst4Msg = removeStopWords(stopWords, ctRst4Msg, false, "messages");
@@ -69,7 +58,12 @@ int main() {
     msgIndex = word2Index(wordIndex, ctRst4Msg, "messages");
     flgIndex = word2Index(wordIndex, ctRst4Flg, "feelings");
     
+    vector<vector<double>> tfMatrix4Msg;
+    vector<vector<double>> tfMatrix4Flg;
+    tfMatrix4Msg = getTF(msgIndex, wordIndex, "messages");
+    tfMatrix4Flg = getTF(flgIndex, wordIndex, "feelings");
     
+    // TODO: *加入矩阵运算库，计算 idf 、tf*idf、矩阵分解
     
     return 0;
 }
