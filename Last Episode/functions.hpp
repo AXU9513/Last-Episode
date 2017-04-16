@@ -14,7 +14,8 @@
 #include <iostream>
 #include <map>
 #include <set>
-#include <pthread.h>
+#include <algorithm>
+
 using namespace std;
 typedef map<string, int> MY_MAP;
 
@@ -44,6 +45,8 @@ MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<
 
 vector<vector<int>> word2Index(MY_MAP wordIndex, vector<vector<string>> wordVector, string name);  // Transform wordVector to indexVector.
 
-vector<vector<double>> getTF(vector<vector<int>> sntncIndex, MY_MAP wordIndex, string name); // Calculate word frequency in every document, return all documents.
+vector<vector<double>> calTFIDF(vector<vector<int>> sntncIndex, int dicLength, string name); // Calculate TF*IDF.
+
+
 
 #endif /* functions_hpp */

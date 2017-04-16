@@ -8,7 +8,6 @@
 
 #include "functions.hpp"
 using namespace std;
-using namespace cppjieba;
 
 int main() {
     vector<vector<string>> words;
@@ -58,12 +57,14 @@ int main() {
     msgIndex = word2Index(wordIndex, ctRst4Msg, "messages");
     flgIndex = word2Index(wordIndex, ctRst4Flg, "feelings");
     
+    // Calculate TF*IDF value.
     vector<vector<double>> tfMatrix4Msg;
     vector<vector<double>> tfMatrix4Flg;
-    tfMatrix4Msg = getTF(msgIndex, wordIndex, "messages");
-    tfMatrix4Flg = getTF(flgIndex, wordIndex, "feelings");
+    tfMatrix4Msg = calTFIDF(msgIndex, (int)wordIndex.size(), "messages");
+    tfMatrix4Flg = calTFIDF(flgIndex, (int)wordIndex.size(), "feelings");
     
-    // TODO: *加入矩阵运算库，计算 idf 、tf*idf、矩阵分解
+    // TODO: 矩阵分解
+    
     
     return 0;
 }

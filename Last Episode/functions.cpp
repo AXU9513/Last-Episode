@@ -8,27 +8,48 @@
 
 #include "functions.hpp"
 
-vector<vector<double>> getTF(vector<vector<int>> sntncIndex, MY_MAP wordIndex, string name){
+vector<vector<double>> calTFIDF(vector<vector<int>> sntncIndex, int dicLength, string name){
     cout << "Start calculate TF matrix for "<< name << "..." << endl;
-    int dicLength = (int)wordIndex.size();
     int sentenceLength = (int)sntncIndex.size();
-    int n = 0, m = 0;
+    vector<bool> count(dicLength, false);       // Whether a artical contains a particular word.
+    vector<int> articalCount(dicLength, 0);     // Number of articals which contain the particular word.
     vector<vector <double> > tfMatrix(sentenceLength ,vector<double>(dicLength, 0.0));  // Init a n*m matrix with all elements equal to 0
     for (int i = 0; i < sentenceLength; i++) {
         for (int j = 0; j < sntncIndex[i].size(); j++) {
             tfMatrix[i][sntncIndex[i][j]]++;    // Count the times a word appears in artical i.
-            n++;
+            count[sntncIndex[i][j]] = true;
         }
-        for (int k = 0; k < tfMatrix[i].size(); k++) {
+        for (int k = 0; k < tfMatrix[i].size(); k++) {  // tf = (Times of appearence)/(numbers in wordIndex)
             if (tfMatrix[i][k] != 0) {
                 tfMatrix[i][k] = (double)tfMatrix[i][k]/(double)tfMatrix[i].size();
-                m++;
+            }
+        }
+        for (int i = 0; i < dicLength; i++) {
+            if (count[i]) {
+                articalCount[i]++;
+                count[i] = false;
             }
         }
     }
     cout << "   done." << endl;
-    cout << "m = " << m << "; n = " << n << endl;
-    return tfMatrix;
+    
+    cout << "Start calculate IDF value for " << name << "..." << endl;
+    int N = (int)tfMatrix.size();    // Total number of articals.
+    vector<double> IDF(dicLength, 0);
+    for (int i = 0; i < dicLength; i++) {   // idf = (Number of articals)/(Number of articals which contains the paticular word)
+        IDF[i] = log10(((double)N + 0.01)/((double)articalCount[i] + 0.01));
+    }
+    cout << "   done." << endl;
+    
+    cout << "Start calculate TF*IDF value for " << name << "..." << endl;
+    vector<vector<double>> tfidfMatrix(sentenceLength ,vector<double>(dicLength, 0.0));
+    for (int i = 0; i < tfMatrix.size(); i++) {
+        for (int j = 0; j < tfMatrix[i].size(); j++) {
+            tfidfMatrix[i][j] = tfMatrix[i][j] * IDF[j];
+        }
+    }
+    cout << "   done." << endl;
+    return tfidfMatrix; // Each elements in "tfidfMatrix" represents the weight of a word in the given artical.
 }
 
 vector<vector<int>> word2Index(MY_MAP map, vector<vector<string>> wordVector, string name) {
@@ -193,7 +214,7 @@ vector<vector<string>> readData() {
     vector<vector<string>> words;
     string line, field, tempField = "";
     ifstream in;
-    in.open("data.csv");
+    in.open("test.csv");
     if (in.is_open()) {
         //        int lineNum = 0;
         bool phraseStarted = 0;  // In case that a phrase contains ','
