@@ -58,8 +58,10 @@ int main() {
     flgIndex = word2Index(wordIndex, ctRst4Flg, "feelings");
     
     // Calculate TF*IDF value.
-    vector<vector<double>> tfMatrix4Msg;
-    vector<vector<double>> tfMatrix4Flg;
+//    vector<vector<double>> tfMatrix4Msg;
+//    vector<vector<double>> tfMatrix4Flg;
+    MatrixXd tfMatrix4Msg;
+    MatrixXd tfMatrix4Flg;
     tfMatrix4Msg = calTFIDF(msgIndex, (int)wordIndex.size(), "messages");
     tfMatrix4Flg = calTFIDF(flgIndex, (int)wordIndex.size(), "feelings");
     

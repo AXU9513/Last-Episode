@@ -15,8 +15,11 @@
 #include <map>
 #include <set>
 #include <algorithm>
+#include <Eigen/Sparse>
+#include <Eigen/SVD>
 
 using namespace std;
+using namespace Eigen;
 typedef map<string, int> MY_MAP;
 
 const char* const DICT_PATH = "dict/jieba.dict.utf8";
@@ -45,8 +48,8 @@ MY_MAP buildWordIndex(vector<string> stopWords, vector<string> messages, vector<
 
 vector<vector<int>> word2Index(MY_MAP wordIndex, vector<vector<string>> wordVector, string name);  // Transform wordVector to indexVector.
 
-vector<vector<double>> calTFIDF(vector<vector<int>> sntncIndex, int dicLength, string name); // Calculate TF*IDF.
+//vector<vector<double>> calTFIDF(vector<vector<int>> sntncIndex, int dicLength, string name); // Calculate TF*IDF.
 
-
+MatrixXd calTFIDF(vector<vector<int>> sntncIndex, int dicLength, string name);  // Calculate TF*IDF.
 
 #endif /* functions_hpp */

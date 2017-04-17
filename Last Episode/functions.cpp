@@ -8,7 +8,7 @@
 
 #include "functions.hpp"
 
-vector<vector<double>> calTFIDF(vector<vector<int>> sntncIndex, int dicLength, string name){
+MatrixXd calTFIDF(vector<vector<int>> sntncIndex, int dicLength, string name){
     cout << "Start calculate TF matrix for "<< name << "..." << endl;
     int sentenceLength = (int)sntncIndex.size();
     vector<bool> count(dicLength, false);       // Whether a artical contains a particular word.
@@ -42,10 +42,12 @@ vector<vector<double>> calTFIDF(vector<vector<int>> sntncIndex, int dicLength, s
     cout << "   done." << endl;
     
     cout << "Start calculate TF*IDF value for " << name << "..." << endl;
-    vector<vector<double>> tfidfMatrix(sentenceLength ,vector<double>(dicLength, 0.0));
+//    vector<vector<double>> tfidfMatrix(sentenceLength ,vector<double>(dicLength, 0.0));
+    MatrixXd tfidfMatrix = MatrixXd::Constant(sentenceLength, dicLength, 0.0);
     for (int i = 0; i < tfMatrix.size(); i++) {
         for (int j = 0; j < tfMatrix[i].size(); j++) {
-            tfidfMatrix[i][j] = tfMatrix[i][j] * IDF[j];
+//            tfidfMatrix[i][j] = tfMatrix[i][j] * IDF[j];
+            tfidfMatrix(i, j) = tfMatrix[i][j] * IDF[j];
         }
     }
     cout << "   done." << endl;
